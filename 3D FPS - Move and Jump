@@ -1,0 +1,56 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class FirstPersonController : MonoBehaviour
+{
+    [SerializeField]
+    int FPS = 120;
+    [SerializeField]
+    float speed = 6.0f;
+    [SerializeField]
+    float jumpSpeed = 8.0f;
+    [SerializeField]
+    float gravidade = 20.0f;
+    Vector3 moveDirection = Vector3.zero;
+
+    float yRotation, xRotation;
+    float lookSensitivity = 2;
+    float currentXRotation, currentYRotation;
+    float yRotationV, xRotationV;
+    float lookSmoothnes = 0.1f;
+
+    void Start()
+    {
+        Application.targetFrameRate = FPS;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
+    
+    void Update()
+    {
+        CharacterController controller = GetComponent<CharacterController>();
+        if(controller.isGrounded)
+        {
+            moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+            moveDirection = transform.TransformDirection(moveDirection);
+            moveDirection *= speed;
+            if(Input.GetButton("Jump"))
+            {
+                moveDirection.y = jumpSpeed;
+            }
+        }
+
+        moveDirection.y -= gravidade * Time.deltaTime;
+        controller.Move(moveDirection * Time.deltaTime);
+
+        yRotation += Input.GetAxis("Mouse X") * lookSensitivity;
+        xRotation -= Input.GetAxis("Mouse Y") * lookSensitivity;
+        xRotation = Mathf.Clamp(xRotation, -80, 100);
+        currentXRotation = Mathf.SmoothDamp(currentXRotation, xRotation, ref xRotationV, lookSmoothnes);
+        currentYRotation = Mathf.SmoothDamp(currentYRotation, yRotation, ref yRotationV, lookSmoothnes);
+        transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
+
+    }
+}
