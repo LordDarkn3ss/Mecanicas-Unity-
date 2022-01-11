@@ -15,7 +15,7 @@ public class ShootProjectile : MonoBehaviour
 
     Vector3 destination;
     float timeToFire;
-    Projetil nome_Script_do_Projetil;
+    Nome_Script_do_Projetil projetil;
 
     void Update()
     {
@@ -37,9 +37,9 @@ public class ShootProjectile : MonoBehaviour
     {
         var projectileObj = Instantiate(projectile, firePoint.position, Quaternion.identity) as GameObject;
 
-        nome_Script_do_Projetil = projectileObj.GetComponent<Projetil>();
+        projetil = projectileObj.GetComponent<Nome_Script_do_Projetil>();
         RotateToDestination(projectileObj, destination, true);
-        projectileObj.GetComponent<Rigidbody>().velocity = transform.forward * nome_Script_do_Projetil.speed;
+        projectileObj.GetComponent<Rigidbody>().velocity = transform.forward * Nome_Script_do_Projetil.speed;
     }
 
     void RotateToDestination(GameObject obj, Vector3 destination, bool onlyY)
